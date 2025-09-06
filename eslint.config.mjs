@@ -1,25 +1,49 @@
-import { dirname } from "path";
-import { fileURLToPath } from "url";
-import { FlatCompat } from "@eslint/eslintrc";
+import js from "@eslint/js";
+import globals from "globals";
+import react from "eslint-plugin-react";
+import reactHooks from "eslint-plugin-react-hooks";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-});
-
-const eslintConfig = [
-  ...compat.extends("next/core-web-vitals"),
+export default [
   {
-    ignores: [
-      "node_modules/**",
-      ".next/**",
-      "out/**",
-      "build/**",
-      "next-env.d.ts",
-    ],
+    ignores: ["dist"],
+  },
+  {
+    files: ["**/*.{js,jsx}"],
+    languageOptions: {
+      ecmaVersion: "latest",
+      sourceType: "module",
+      globals: globals.browser,
+      parserOptions: {
+        ecmaFeatures: {
+          jsx: true, // 👈 habilita JSX
+        },
+      },
+    },
+    plugins: {
+      react,
+      "react-hooks": reactHooks,
+    },
+    rules: {
+      ...js.configs.recommended.rules,
+      "no-unused-vars": "warn",
+      "no-console": "warn",
+      "eqeqeq": "warn",
+      "curly": "warn",
+      "semi": ["warn", "always"],
+
+      "no-undef": "error",
+      "no-empty": "warn",
+
+      "react/react-in-jsx-scope": "off", // React 17+
+      "react/prop-types": "off",
+      "react/jsx-uses-react": "off",
+      "react-hooks/rules-of-hooks": "error",
+      "react-hooks/exhaustive-deps": "warn",
+    },
+    settings: {
+      react: {
+        version: "detect",
+      },
+    },
   },
 ];
-
-export default eslintConfig;
