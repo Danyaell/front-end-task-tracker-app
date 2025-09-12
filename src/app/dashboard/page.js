@@ -3,8 +3,10 @@ import { useState } from "react";
 import TaskModal from "@/components/TaskModal/TaskModal";
 import TaskCard from "@/components/TaskCard/TaskCard";
 import "./dashboard.css";
+import { useAuth } from "@/context/AuthContext";
 
 export default function DashboardPage() {
+  const { isAuthenticated } = useAuth();
   const [tasks, setTasks] = useState([
     {
       id: 1,
@@ -56,37 +58,43 @@ export default function DashboardPage() {
 
   return (
     <div className="dashboardContainer">
-      <h2>Dashboard</h2>
-      <div className="boardContainer">
-        {["todo", "in-progress", "done"].map((status) => (
-          <div
-            className="statusColumn"
-            key={status}
-            onDrop={(e) => handleDrop(e, status)}
-            onDragOver={allowDrop}
-          >
-            <h3 style={{ textTransform: "uppercase" }}>
-              {status.replace("-", " ")}
-            </h3>
-            {tasks
-              .filter((t) => t.status === status)
-              .map((task) => (
-                <TaskCard
-                  key={task.id}
-                  task={task}
-                  onDragStart={(e) => handleDragStart(e, task.id)}
-                  onClick={() => setSelectedTask(task)}
-                />
-              ))}
+      {isAuthenticated ? (
+        <>
+          <h2>Dashboard</h2>
+          <div className="boardContainer">
+            {["todo", "in-progress", "done"].map((status) => (
+              <div
+                className="statusColumn"
+                key={status}
+                onDrop={(e) => handleDrop(e, status)}
+                onDragOver={allowDrop}
+              >
+                <h3 style={{ textTransform: "uppercase" }}>
+                  {status.replace("-", " ")}
+                </h3>
+                {tasks
+                  .filter((t) => t.status === status)
+                  .map((task) => (
+                    <TaskCard
+                      key={task.id}
+                      task={task}
+                      onDragStart={(e) => handleDragStart(e, task.id)}
+                      onClick={() => setSelectedTask(task)}
+                    />
+                  ))}
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
-      {selectedTask && (
-        <TaskModal
-          task={selectedTask}
-          onDelete={handleDelete}
-          onClose={() => setSelectedTask(null)}
-        />
+          {selectedTask && (
+            <TaskModal
+              task={selectedTask}
+              onDelete={handleDelete}
+              onClose={() => setSelectedTask(null)}
+            />
+          )}
+        </>
+      ) : (
+        <p>Please log in to view your dashboard.</p>
       )}
     </div>
   );

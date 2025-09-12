@@ -26,6 +26,10 @@ export async function loginUserService(credentials) {
   }
 }
 
-export function logoutUserService() {
-  localStorage.removeItem("token");
-};
+export async function getCurrentUserService() {
+  try {
+    return await apiFetch("/auth/me", { method: "GET" });
+  } catch (error) {
+    return { error: error.message || "Failed to fetch user." };
+  }
+}
