@@ -2,5 +2,19 @@
   font-family: Arial, Helvetica, sans-serif;
   padding: 50px;
   padding-bottom: 5rem;
-  min-height: 100vh;
+  min-height: 80vh;
+}
+
+.title {
+  margin-bottom: 20px;
+  font-size: larger;
+}
+
+.linksContainer {
+  margin-top: 20px;
+}
+
+.link {
+  color: #2c7fc4;
+  text-decoration: none;
 }

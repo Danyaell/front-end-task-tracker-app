@@ -19,11 +19,12 @@ export default function RegisterPage() {
   };
 
   return (
-    <div>
-      <h2>Register</h2>
-      <form onSubmit={handleSubmit}>
+    <div className="registerContainer">
+      <h2 className="formTitle">Register</h2>
+      <form onSubmit={handleSubmit} className="formContainer">
         <input
           type="text"
+          className="inputField"
           placeholder="Username"
           value={form.username}
           onChange={(e) => setForm({ ...form, username: e.target.value })}
@@ -31,20 +32,25 @@ export default function RegisterPage() {
         />
         <input
           type="password"
+          className="inputField"
           placeholder="Password"
           value={form.password}
           onChange={(e) => setForm({ ...form, password: e.target.value })}
           required
         />
         <select
+          className="inputField"
           value={form.role}
           onChange={(e) => setForm({ ...form, role: e.target.value })}
-          required>
+          required
+        >
           <option value="">Select role</option>
           <option value="user">User</option>
           <option value="admin">Admin</option>
-          </select>
-        <button type="submit">Sign up</button>
+        </select>
+        <button type="submit" className="submitButton">
+          Sign up
+        </button>
       </form>
       {message && <p>{message}</p>}
     </div>

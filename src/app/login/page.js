@@ -20,11 +20,12 @@ export default function LoginPage() {
   };
 
   return (
-    <div>
-      <h2>Login</h2>
-      <form onSubmit={handleSubmit}>
+    <div className="loginContainer">
+      <h2 className="formTitle">Login</h2>
+      <form onSubmit={handleSubmit} className="formContainer">
         <input
           type="text"
+          className="inputField"
           placeholder="Username"
           value={form.email}
           onChange={(e) => setForm({ ...form, username: e.target.value })}
@@ -32,14 +33,33 @@ export default function LoginPage() {
         />
         <input
           type="password"
+          className="inputField"
           placeholder="Password"
           value={form.password}
           onChange={(e) => setForm({ ...form, password: e.target.value })}
           required
         />
-        <button type="submit">Login</button>
+        <button type="submit" className="submitButton">
+          Login
+        </button>
       </form>
-      {message && <p>{message}</p>}
+      {message && (
+        <div
+          className={`messageContainer ${
+            message === "Invalid credentials."
+              ? "errorContainer"
+              : "successContainer"
+          }`}
+        >
+          <p
+            className={`message ${
+              message === "Invalid credentials." ? "error" : "success"
+            }`}
+          >
+            {message}
+          </p>
+        </div>
+      )}
     </div>
   );
 }
