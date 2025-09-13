@@ -8,21 +8,15 @@ export default function TaskCard({ task, onClick, onDragStart }) {
       onClick={onClick}
       className="taskCardContainer"
     >
-      <h4>{task.title}</h4>
+      <h4 className="taskTitle">{task.title}</h4>
       <p>
         <strong>Description:</strong> {task.description}
       </p>
       <p>
-        <strong>Status:</strong> {task.status}
+        <strong>Created:</strong> {new Date(task.createdAt).toLocaleDateString()}
       </p>
       <p>
-        <strong>Assignee:</strong> {task.assignedTo}
-      </p>
-      <p>
-        <strong>Created:</strong> {task.createdAt}
-      </p>
-      <p>
-        <strong>Due:</strong> {task.dueDate}
+        <strong>Due:</strong> {task.dueDate ? new Date(task.dueDate).toLocaleDateString() : "N/A"}
       </p>
     </div>
   );
