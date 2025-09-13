@@ -1,60 +1,60 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TaskModal from "@/components/TaskModal/TaskModal";
 import TaskCard from "@/components/TaskCard/TaskCard";
 import "./dashboard.css";
 import { useAuth } from "@/context/AuthContext";
+import { deleteTaskService, getTasks, updateTaskService } from "@/api/tasks";
 
 export default function DashboardPage() {
   const { isAuthenticated } = useAuth();
-  const [tasks, setTasks] = useState([
-    {
-      id: 1,
-      title: "Configure login",
-      description: "Implement JWT auth",
-      status: "todo",
-      assignedTo: "Danyaell",
-      createdAt: "2025-09-11",
-      dueDate: "2025-09-18",
-    },
-    {
-      id: 2,
-      title: "Landing page",
-      description: "Design public page",
-      status: "in-progress",
-      assignedTo: "Alex",
-      createdAt: "2025-09-10",
-      dueDate: "2025-09-15",
-    },
-    {
-      id: 3,
-      title: "Tasks CRUD",
-      description: "Create CRUD api for tasks",
-      status: "done",
-      assignedTo: "Sofia",
-      createdAt: "2025-09-05",
-      dueDate: "2025-09-12",
-    },
-  ]);
+  const [tasks, setTasks] = useState([]);
   const [selectedTask, setSelectedTask] = useState(null);
 
   const handleDragStart = (e, id) => {
     e.dataTransfer.setData("taskId", id);
   };
 
-  const handleDrop = (e, newStatus) => {
+  const handleDrop = async (e, newStatus) => {
+    e.preventDefault();
     const id = e.dataTransfer.getData("taskId");
-    setTasks(
-      tasks.map((t) => (t.id === Number(id) ? { ...t, status: newStatus } : t))
-    );
+    const originalTasks = [...tasks];
+    const updatedTasks = tasks.map((t) => (t.id === id ? { ...t, status: newStatus } : t));
+    setTasks(updatedTasks);
+    try {
+      await updateTaskService(id, { status: newStatus });
+    } catch (error) {
+      setTasks(originalTasks);
+      console.error("Error updating task status:", error);
+    }
   };
 
   const allowDrop = (e) => e.preventDefault();
 
-  const handleDelete = (id) => {
-    setTasks(tasks.filter((t) => t.id !== id));
-    setSelectedTask(null);
+  const handleDelete = async (id) => {
+    const originalTasks = [...tasks];
+    const updatedTasks = tasks.filter((t) => t.id !== id);
+    setTasks(updatedTasks);
+    try {
+      await deleteTaskService(id);
+      setSelectedTask(null);
+    } catch (error) {
+      setTasks(originalTasks);
+      console.error("Error deleting task:", error);
+    }
   };
+
+  useEffect(() => {
+    async function fetchTasks() {
+      const tasks = await getTasks();
+      const normilizedTasks = tasks.map((t) => ({
+        ...t,
+        id: t._id,
+      }));
+      setTasks(normilizedTasks);
+    }
+    fetchTasks();
+  }, []);
 
   return (
     <div className="dashboardContainer">
@@ -62,7 +62,7 @@ export default function DashboardPage() {
         <>
           <h2>Dashboard</h2>
           <div className="boardContainer">
-            {["todo", "in-progress", "done"].map((status) => (
+            {["todo", "in_progress", "done"].map((status) => (
               <div
                 className="statusColumn"
                 key={status}
@@ -70,7 +70,7 @@ export default function DashboardPage() {
                 onDragOver={allowDrop}
               >
                 <h3 style={{ textTransform: "uppercase" }}>
-                  {status.replace("-", " ")}
+                  {status.replace("_", " ")}
                 </h3>
                 {tasks
                   .filter((t) => t.status === status)
