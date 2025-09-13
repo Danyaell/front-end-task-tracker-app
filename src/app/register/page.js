@@ -14,7 +14,6 @@ export default function RegisterPage() {
       setMessage(res.error);
     } else {
       setMessage("User registered successfully!");
-      window.location.href = "/login";
     }
   };
 
@@ -52,7 +51,23 @@ export default function RegisterPage() {
           Sign up
         </button>
       </form>
-      {message && <p>{message}</p>}
+      {message && (
+        <div
+          className={`messageContainer ${
+            message === "User registered successfully!"
+              ? "successContainer"
+              : "errorContainer"
+          }`}
+        >
+          <p
+            className={`message ${
+              message === "User registered successfully!" ? "success" : "error"
+            }`}
+          >
+            {message}
+          </p>
+        </div>
+      )}
     </div>
   );
 }
