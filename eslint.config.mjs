@@ -23,13 +23,14 @@ export default [
       react,
       "react-hooks": reactHooks,
     },
+    extends: ["next/core-web-vitals", "plugin:react/recommended"],
     rules: {
       ...js.configs.recommended.rules,
       "no-unused-vars": "warn",
       "no-console": "warn",
-      "eqeqeq": "warn",
-      "curly": "warn",
-      "semi": ["warn", "always"],
+      eqeqeq: "warn",
+      curly: "warn",
+      semi: ["warn", "always"],
 
       "no-undef": "error",
       "no-empty": "warn",

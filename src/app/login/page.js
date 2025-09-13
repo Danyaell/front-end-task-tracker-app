@@ -1,19 +1,19 @@
 "use client";
 import { useState } from "react";
 import "./login.css";
-import { loginUserService } from "@/api/auth";
+import { useAuth } from "@/context/AuthContext";
 
 export default function LoginPage() {
+  const { login } = useAuth();
   const [form, setForm] = useState({ username: "", password: "" });
   const [message, setMessage] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const res = await loginUserService(form);
+    const res = await login(form);
     if (res.error) {
       setMessage(res.error);
     } else {
-      localStorage.setItem("token", res.token);
       setMessage("Login success.");
       //window.location.href = "/dashboard";
     }

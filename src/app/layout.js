@@ -1,4 +1,6 @@
+import { AuthProvider } from "@/context/AuthContext";
 import "./globals.css";
+import Navbar from "@/components/Navbar/Navbar";
 
 export const metadata = {
   title: "Task Tracker App",
@@ -10,25 +12,13 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
-        <nav>
-          <a href="/" className="navButton">
-            Home
-          </a>
-          <a href="/login" className="navButton">
-            Login
-          </a>
-          <a href="/register" className="navButton">
-            Register
-          </a>
-          <a href="/dashboard" className="navButton">
-            Dashboard
-          </a>
-          <a href="/admin">Admin</a>
-        </nav>
-        <main>{children}</main>
-        <footer>
-          <p>© 2024 Task Tracker App. All rights reserved.</p>
-        </footer>
+        <AuthProvider>
+          <Navbar />
+          <main>{children}</main>
+          <footer>
+            <p>© 2024 Task Tracker App. All rights reserved.</p>
+          </footer>
+        </AuthProvider>
       </body>
     </html>
   );

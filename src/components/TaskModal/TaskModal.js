@@ -25,7 +25,7 @@ export default function TaskModal({ task, onDelete, onClose }) {
           Delete
         </button>
         <button onClick={onClose} className="closeButton">
-          Cerrar
+          Close
         </button>
       </div>
     </div>
