@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "../TaskCard/TaskCard.css";
+import "./TaskCardForm.css";
 
 export default function TaskCardForm({ status, onCancel, onSave }) {
   const [title, setTitle] = useState("");
@@ -18,29 +18,32 @@ export default function TaskCardForm({ status, onCancel, onSave }) {
   };
 
   return (
-    <div className="taskCardContainer editing">
-      <form onSubmit={handleSubmit}>
+    <div className="taskCardContainer">
+      <form onSubmit={handleSubmit} className="formContainer">
         <input
           type="text"
+          className="input"
           placeholder="Task title..."
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           required
         />
         <textarea
+          className="input"
           placeholder="Description..."
           value={description}
           onChange={(e) => setDescription(e.target.value)}
         />
         <input
           type="date"
+          className="input"
           value={dueDate}
           onChange={(e) => setDueDate(e.target.value)}
         />
 
         <div className="formActions">
-          <button type="submit">Save</button>
-          <button type="button" onClick={onCancel}>
+          <button type="submit" className="submitButton">Save</button>
+          <button type="button" className="cancelButton" onClick={onCancel}>
             Cancel
           </button>
         </div>
