@@ -4,6 +4,11 @@
   min-height: 100vh;
 }
 
+.title {
+  margin-bottom: 20px;
+  font-size: larger;
+}
+
 .boardContainer {
   display: flex;
   gap: 2rem;
@@ -25,6 +30,24 @@
   border-radius: 8px;
 }
 
+h3.todo {
+  font-size: larger;
+  font-weight: bold;
+  color: #696969;
+}
+
+h3.in_progress {
+  font-size: larger;
+  font-weight: bold;
+  color: #9e710f;
+}
+
+h3.done {
+  font-size: larger;
+  font-weight: bold;
+  color: #2e7d32;
+}
+
 .in_progress {
   background-color: #ecd092;
 }
@@ -41,7 +64,7 @@
 
 .addButton {
   background-color: #00000027;
-  color: white;
+  color: rgba(255, 255, 255, 0.842);
   border: none;
   padding: 5px 10px;
   border-radius: 4px;

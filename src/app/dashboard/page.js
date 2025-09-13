@@ -33,9 +33,9 @@ export default function DashboardPage() {
     e.preventDefault();
     const id = e.dataTransfer.getData("taskId");
     const originalTasks = [...tasks];
-    const updatedTasks = tasks.map((t) =>
-      t.id === id ? { ...t, status: newStatus } : t
-    );
+    const updatedTasks = tasks
+      ? tasks.map((t) => (t.id === id ? { ...t, status: newStatus } : t))
+      : [];
     setTasks(updatedTasks);
     try {
       await updateTaskService(id, { status: newStatus });
@@ -73,11 +73,15 @@ export default function DashboardPage() {
 
   async function fetchTasks() {
     const tasks = await getTasks();
-    const normilizedTasks = tasks.map((t) => ({
-      ...t,
-      id: t._id,
-    }));
-    setTasks(normilizedTasks);
+    if (!tasks.error) {
+      const normilizedTasks = tasks
+        ? tasks.map((t) => ({
+            ...t,
+            id: t._id,
+          }))
+        : [];
+      setTasks(normilizedTasks);
+    }
   }
 
   useEffect(() => {
@@ -88,7 +92,7 @@ export default function DashboardPage() {
     <div className="dashboardContainer">
       {isAuthenticated ? (
         <>
-          <h2>Dashboard</h2>
+          <h2 className="title">Dashboard</h2>
           <div className="boardContainer">
             {["todo", "in_progress", "done"].map((status) => (
               <div
@@ -98,7 +102,7 @@ export default function DashboardPage() {
                 onDragOver={allowDrop}
               >
                 <div className="columnHeader">
-                  <h3 style={{ textTransform: "uppercase" }}>
+                  <h3 className={status} style={{ textTransform: "uppercase" }}>
                     {status.replace("_", " ")}
                   </h3>
                   <button
@@ -112,7 +116,7 @@ export default function DashboardPage() {
                 </div>
                 {tasks
                   .filter((t) => t.status === status)
-                  .map((task) => (
+                  ?.map((task) => (
                     <TaskCard
                       key={task.id}
                       task={task}

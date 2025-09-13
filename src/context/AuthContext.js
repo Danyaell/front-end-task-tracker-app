@@ -4,7 +4,7 @@ import {
   loginUserService,
   registerUserService,
 } from "@/api/auth";
-import { createContext, useContext, useEffect, useReducer } from "react";
+import { createContext, useContext, useEffect, useReducer, useState } from "react";
 
 const AuthContext = createContext();
 
@@ -12,7 +12,6 @@ const initialState = {
   user: null,
   token: null,
   isAuthenticated: false,
-  loading: true,
 };
 
 function authReducer(state, action) {
@@ -23,7 +22,6 @@ function authReducer(state, action) {
         user: action.payload.user,
         token: action.payload.token,
         isAuthenticated: true,
-        loading: false,
       };
     case "LOGOUT":
       localStorage.removeItem("token");
@@ -32,10 +30,7 @@ function authReducer(state, action) {
         user: null,
         token: null,
         isAuthenticated: false,
-        loading: false,
       };
-    case "LOADING_DONE":
-      return { ...state, loading: false };
     default:
       return state;
   }
@@ -52,6 +47,7 @@ function isTokenExpired(token) {
 
 export function AuthProvider({ children }) {
   const [state, dispatch] = useReducer(authReducer, initialState);
+  const [isLoading, setIsLoading] = useState(true);
   const isAdmin = state.user?.role === "admin";
 
   useEffect(() => {
@@ -60,7 +56,10 @@ export function AuthProvider({ children }) {
       if (token && !isTokenExpired(token)) {
         const res = await getCurrentUserService();
         if (!res.error) {
-          dispatch({ type: "LOGIN_SUCCESS", payload: { user: res.user, token } });
+          dispatch({
+            type: "LOGIN_SUCCESS",
+            payload: { user: res, token },
+          });
         } else {
           dispatch({ type: "LOGOUT" });
         }
@@ -69,6 +68,7 @@ export function AuthProvider({ children }) {
       }
     }
     loadUser();
+    setIsLoading(false);
   }, []);
 
   const login = async (credentials) => {
@@ -93,7 +93,9 @@ export function AuthProvider({ children }) {
   };
 
   return (
-    <AuthContext.Provider value={{ ...state, login, register, logout, isAdmin }}>
+    <AuthContext.Provider
+      value={{ ...state, login, register, logout, isLoading, isAdmin }}
+    >
       {children}
     </AuthContext.Provider>
   );
