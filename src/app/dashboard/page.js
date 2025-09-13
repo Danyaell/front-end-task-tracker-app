@@ -4,12 +4,26 @@ import TaskModal from "@/components/TaskModal/TaskModal";
 import TaskCard from "@/components/TaskCard/TaskCard";
 import "./dashboard.css";
 import { useAuth } from "@/context/AuthContext";
-import { deleteTaskService, getTasks, updateTaskService } from "@/api/tasks";
+import {
+  createTaskService,
+  deleteTaskService,
+  getTasks,
+  updateTaskService,
+} from "@/api/tasks";
+import TaskCardForm from "@/components/TaskCardForm/TaskCardForm";
 
 export default function DashboardPage() {
   const { isAuthenticated } = useAuth();
   const [tasks, setTasks] = useState([]);
+  const [isAdding, setIsAdding] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
+  const [newTask, setNewTask] = useState({
+    title: "",
+    description: "",
+    status: "",
+    assignee: "",
+    dueDate: "",
+  });
 
   const handleDragStart = (e, id) => {
     e.dataTransfer.setData("taskId", id);
@@ -19,7 +33,9 @@ export default function DashboardPage() {
     e.preventDefault();
     const id = e.dataTransfer.getData("taskId");
     const originalTasks = [...tasks];
-    const updatedTasks = tasks.map((t) => (t.id === id ? { ...t, status: newStatus } : t));
+    const updatedTasks = tasks.map((t) =>
+      t.id === id ? { ...t, status: newStatus } : t
+    );
     setTasks(updatedTasks);
     try {
       await updateTaskService(id, { status: newStatus });
@@ -30,6 +46,17 @@ export default function DashboardPage() {
   };
 
   const allowDrop = (e) => e.preventDefault();
+
+  const handleCreateTask = (status) => {
+    setIsAdding(true);
+    setNewTask({
+      title: "",
+      description: "",
+      status,
+      assignee: "",
+      dueDate: "",
+    });
+  };
 
   const handleDelete = async (id) => {
     const originalTasks = [...tasks];
@@ -44,15 +71,16 @@ export default function DashboardPage() {
     }
   };
 
+  async function fetchTasks() {
+    const tasks = await getTasks();
+    const normilizedTasks = tasks.map((t) => ({
+      ...t,
+      id: t._id,
+    }));
+    setTasks(normilizedTasks);
+  }
+
   useEffect(() => {
-    async function fetchTasks() {
-      const tasks = await getTasks();
-      const normilizedTasks = tasks.map((t) => ({
-        ...t,
-        id: t._id,
-      }));
-      setTasks(normilizedTasks);
-    }
     fetchTasks();
   }, []);
 
@@ -64,14 +92,24 @@ export default function DashboardPage() {
           <div className="boardContainer">
             {["todo", "in_progress", "done"].map((status) => (
               <div
-                className="statusColumn"
+                className={`statusColumn ${status}`}
                 key={status}
                 onDrop={(e) => handleDrop(e, status)}
                 onDragOver={allowDrop}
               >
-                <h3 style={{ textTransform: "uppercase" }}>
-                  {status.replace("_", " ")}
-                </h3>
+                <div className="columnHeader">
+                  <h3 style={{ textTransform: "uppercase" }}>
+                    {status.replace("_", " ")}
+                  </h3>
+                  <button
+                    className="addButton"
+                    onClick={() => {
+                      handleCreateTask(status);
+                    }}
+                  >
+                    Add
+                  </button>
+                </div>
                 {tasks
                   .filter((t) => t.status === status)
                   .map((task) => (
@@ -82,6 +120,19 @@ export default function DashboardPage() {
                       onClick={() => setSelectedTask(task)}
                     />
                   ))}
+                {isAdding && newTask.status === status && (
+                  <TaskCardForm
+                    key="new-task"
+                    status={status}
+                    onCancel={() => setIsAdding(false)}
+                    onSave={(newTask) => {
+                      createTaskService(newTask).then(() => {
+                        fetchTasks();
+                        setIsAdding(false);
+                      });
+                    }}
+                  />
+                )}
               </div>
             ))}
           </div>

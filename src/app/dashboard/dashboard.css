@@ -24,3 +24,26 @@
   background-color: #f4f4f4;
   border-radius: 8px;
 }
+
+.in_progress {
+  background-color: #ecd092;
+}
+
+.done {
+  background-color: #93cfa1;
+}
+
+.columnHeader {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.addButton {
+  background-color: #00000027;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}

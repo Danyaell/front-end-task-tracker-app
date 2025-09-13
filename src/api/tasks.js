@@ -1,5 +1,16 @@
 import { apiFetch } from "@/utils/utils";
 
+export async function createTaskService(data) {
+  try {
+    return await apiFetch("/tasks", {
+      method: "POST",
+      body: JSON.stringify(data),
+    });
+  } catch (error) {
+    return { error: error.message || "Failed to create task." };
+  }
+}
+
 export async function getTasks() {
   try {
     return await apiFetch("/tasks", { method: "GET" });
