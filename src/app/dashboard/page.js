@@ -90,7 +90,7 @@ export default function DashboardPage() {
 
   return (
     <div className="dashboardContainer">
-      {isAuthenticated ? (
+      {isAuthenticated && (
         <>
           <h2 className="title">Dashboard</h2>
           <div className="boardContainer">
@@ -148,7 +148,8 @@ export default function DashboardPage() {
             />
           )}
         </>
-      ) : (
+      )}
+      {!isAuthenticated && (
         <p>Please log in to view your dashboard.</p>
       )}
     </div>

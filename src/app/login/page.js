@@ -46,9 +46,7 @@ export default function LoginPage() {
       {message && (
         <div
           className={`messageContainer ${
-            message === "Login success."
-              ? "successContainer"
-              : "errorContainer"
+            message === "Login success." ? "successContainer" : "errorContainer"
           }`}
         >
           <p

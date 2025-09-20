@@ -14,6 +14,9 @@ export default function RegisterPage() {
       setMessage(res.error);
     } else {
       setMessage("User registered successfully!");
+      setTimeout(() => {
+        window.location.href = "/login";
+      }, 5000);
     }
   };
 
