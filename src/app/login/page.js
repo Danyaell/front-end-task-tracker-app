@@ -46,14 +46,12 @@ export default function LoginPage() {
       {message && (
         <div
           className={`messageContainer ${
-            message === "Invalid credentials."
-              ? "errorContainer"
-              : "successContainer"
+            message === "Login success." ? "successContainer" : "errorContainer"
           }`}
         >
           <p
             className={`message ${
-              message === "Invalid credentials." ? "error" : "success"
+              message === "Login success." ? "success" : "error"
             }`}
           >
             {message}

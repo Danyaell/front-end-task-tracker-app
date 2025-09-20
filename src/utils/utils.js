@@ -1,10 +1,10 @@
-import { API_URL } from "@/utils/consts";
+const API_PATH = process.env.NEXT_PUBLIC_API_URL;
 
 export async function apiFetch(endpoint, options = {}) {
   try {
     const token = localStorage.getItem("token");
 
-    const res = await fetch(`${API_URL}${endpoint}`, {
+    const res = await fetch(`${API_PATH}${endpoint}`, {
       headers: {
         "Content-Type": "application/json",
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
